@@ -25,6 +25,21 @@ export default function LocationModal({ isOpen, onClose }) {
             />
             <p className="text-lg mb-2 text-gray-600">RAHI Convention Centre</p>
             <p className="text-gray-600 mb-4">Edamuttam, Pulichode</p>
+            <p className="text-gray-600 mb-4">Saturday, 16th August 2025</p>
+            <p className="text-gray-600 mb-4">11 AM - 2 PM</p>
+           {/* Google Maps Embed */}
+          <div className="w-full aspect-video rounded-lg overflow-hidden">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.5553288972637!2d76.1314046!3d10.3773947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba7f5001cf98955%3A0x23b2a246fcb96978!2sRahi%20convention%20center!5e0!3m2!1sen!2sin!4v1753818465918!5m2!1sen!2sin" 
+              width="100%" 
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full"
+            ></iframe>
+          </div>
           </div>
           
           <div className="flex flex-col space-y-3">
