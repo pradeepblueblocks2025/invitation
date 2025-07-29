@@ -145,17 +145,17 @@ export default function Home() {
               </div>
 
               {/* Section 4: Action buttons - slides from right */}
-                  <div className={`text-white text-xl md:text-2xl mb-8 ${visibleSections >= 3 ? 'animate-slide-left' : 'opacity-0'}`}
+                  <div className={`text-white text-xl md:text-1xl mb-3 ${visibleSections >= 3 ? 'animate-slide-left' : 'opacity-0'}`}
                    style={{ animationDelay: '1.3s' }}>
                 <button 
                   onClick={() => setShowCardModal(true)}
-                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 mr-4 transition-all hover:scale-105 duration-300"
+                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-3 rounded-full border border-white border-opacity-50 mr-4 transition-all hover:scale-105 duration-300"
                 >
                   View Invitation
                 </button>
                 <button 
                   onClick={() => setShowLocationModal(true)}
-                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 transition-all hover:scale-105 duration-300"
+                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-3 rounded-full border border-white border-opacity-50 transition-all hover:scale-105 duration-300"
                 >
                   View Location
                 </button>
