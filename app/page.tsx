@@ -6,6 +6,7 @@ import Header from './components/Header';
 import InvitationCardModal from './components/InvitationCardModal';
 import LocationModal from './components/LocationModal';
 import CountdownTimer from './components/CountdownTimer';
+import TypewriterFooter from './components/TypewriterFooter';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -13,69 +14,87 @@ export default function Home() {
   const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState<boolean>(true); // Changed to false for default unmuted
+  const [showAudioPrompt, setShowAudioPrompt] = useState<boolean>(false);
+  const userInteracted = useRef<boolean>(false);
+  const [visibleSections, setVisibleSections] = useState<number>(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
-
-    // Initialize media
-    const initializeMedia = async () => {
-      // Video initialization
-      if (videoRef.current) {
-        try {
-          videoRef.current.muted = true; // Start video muted to ensure autoplay
-          await videoRef.current.play();
-        } catch (err) {
-          console.error("Video play failed:", err);
+      
+      // Reveal sections with alternating animations
+      const revealSections = () => {
+        setVisibleSections(prev => {
+          if (prev < 5) return prev + 1;
+          return prev;
+        });
+        
+        if (visibleSections < 5) {
+          setTimeout(revealSections, 800); // 800ms between each section
         }
-      }
+      };
+      
+      revealSections();
+    }, 2000); // Initial loading delay
 
-      // Audio initialization - will attempt after slight delay
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.muted = false;
-          audioRef.current.play()
-            .then(() => console.log("Audio playing"))
-            .catch(e => {
-              console.log("Autoplay blocked, showing mute button");
-              //setIsMuted(false); // If blocked, default to muted
-            });
-        }
-      }, 500);
-    };
-
-    initializeMedia();
+    // Initialize video
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(console.error);
+    }
 
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !audioRef.current.muted;
-      setIsMuted(!isMuted);
-      // If unmuting and audio wasn't playing, try to play
-      if (!audioRef.current.muted && audioRef.current.paused) {
-        audioRef.current.play().catch(e => console.log("Play failed:", e));
-      }
-    }
-  };
+  // ... (keep your existing audio handling code) ...
 
   return (
     <>
       <Head>
         <title>Wedding Invitation - Mohammed Sajjad & Shabnam</title>
         <meta name="description" content="Wedding invitation for Mohammed Sajjad & Shabnam" />
+        <style jsx global>{`
+          @keyframes slideInFromLeft {
+            0% {
+              opacity: 0;
+              transform: translateX(-50px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          
+          @keyframes slideInFromRight {
+            0% {
+              opacity: 0;
+              transform: translateX(50px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          
+          .animate-slide-left {
+            opacity: 0;
+            animation: slideInFromLeft 0.8s ease-out forwards;
+          }
+          
+          .animate-slide-right {
+            opacity: 0;
+            animation: slideInFromRight 0.8s ease-out forwards;
+          }
+        `}</style>
       </Head>
 
-      {/* Background video with overlay */}
+      {/* Background video */}
       <div className="fixed inset-0 z-0 overflow-hidden">
-         <video
+        <video
           ref={videoRef}
           autoPlay
           loop
-          muted // Video stays muted to ensure autoplay
+          muted
           playsInline
           className="relative inset-0 z-1 w-full h-full object-cover"
         >
@@ -85,71 +104,68 @@ export default function Home() {
       </div>
 
       {/* Audio element */}
-      <audio ref={audioRef} loop muted={isMuted}>
+      <audio ref={audioRef} loop autoPlay>
         <source src="/assets/audio/wedding.mp3" type="audio/mpeg" />
       </audio>
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col" style={{ background: '#00000099' }}>
-
         {isLoading ? (
           <div className="flex-grow flex items-center justify-center">
             <div className="animate-pulse text-white text-4xl font-bold">Loading...</div>
           </div>
         ) : (
           <>
-            <Header 
-              onToggleMute={toggleMute} 
-              isMuted={isMuted}
-              onShowCard={() => setShowCardModal(true)}
-              onShowLocation={() => setShowLocationModal(true)}
-            />
+            
 
             <main className="flex-grow flex flex-col items-center justify-center px-4 text-center">
-              <div 
-                className="text-white mb-8 animate-fade-in"
-                style={{ animationDelay: '0.5s' }}
-              >
-                <p className="text-xl md:text-1xl mb-3">We invite you to celebrate the wedding of</p>
+              {/* Section 1: Wedding couple names - slides from left */}
+             <div className={`text-white mt-2 mb-8 ${visibleSections >= 1 ? 'animate-slide-left' : 'opacity-0'}`}
+                   style={{ animationDelay: '0.3s' }}>
+                <p className="text-xl md:text-2xl mb-3">We invite you to celebrate the wedding of</p>
                 <h1 className="text-4xl md:text-5xl font-bold mb-2">Mohammed Sajjad</h1>
                 <p className="text-3xl md:text-4xl mb-2">&</p>
                 <h1 className="text-4xl md:text-5xl font-bold">Shabnam</h1>
               </div>
-<CountdownTimer 
-  targetDate={new Date('August 16, 2025 11:00:00')} 
-  className="justify-center my-4"
-/>
-              <div 
-                className="text-white text-xl md:text-2xl mb-8 animate-fade-in"
-                style={{ animationDelay: '1s' }}
-              >
-                <p className="mb-2">Saturday, 16th August 2025</p>
-                <p className="mb-2">11:00 AM onwards</p>
-                
+
+              {/* Section 2: Countdown timer - slides from right */}
+                <div className={`${visibleSections >= 2 ? 'animate-slide-right' : 'opacity-0'}`}
+                   style={{ animationDelay: '0.8s' }}>
+                <CountdownTimer 
+                  targetDate={new Date('August 16, 2025 11:00:00')} 
+                  className="justify-center my-4"
+                />
               </div>
 
-              <div 
-                className="animate-fade-in"
-                style={{ animationDelay: '1.5s' }}
-              >
+              {/* Section 3: Wedding details - slides from left */}
+              <div className={`text-white text-xl md:text-2xl mb-8 ${visibleSections >= 3 ? 'slide-from-left delay-3' : 'opacity-0'}`}>
+                <p className="mb-2">Saturday, 16th August 2025</p>
+                <p className="mb-2">11:00 AM onwards</p>
+                <p className="mb-2">RAHI Convention Centre - Edamuttam, Pulichode</p>
+              </div>
+
+              {/* Section 4: Action buttons - slides from right */}
+                  <div className={`text-white text-xl md:text-2xl mb-8 ${visibleSections >= 3 ? 'animate-slide-left' : 'opacity-0'}`}
+                   style={{ animationDelay: '1.3s' }}>
                 <button 
                   onClick={() => setShowCardModal(true)}
-                  className="text-gray-600 bg-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 mr-4 transition-all"
+                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 mr-4 transition-all hover:scale-105 duration-300"
                 >
                   View Invitation
                 </button>
                 <button 
                   onClick={() => setShowLocationModal(true)}
-                  className="text-gray-600 bg-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 transition-all"
+                  className="text-white bg-opacity-20 hover:bg-opacity-30 font-bold py-3 px-6 rounded-full border border-white border-opacity-50 transition-all hover:scale-105 duration-300"
                 >
                   View Location
                 </button>
               </div>
             </main>
 
-            <footer className="py-6 text-white text-center text-sm">
-              <p>Best Compliments from Mashum Pillerum</p>
-            </footer>
+            {/* Footer - slides from left */}
+            <div className={`${visibleSections >= 5 ? 'slide-from-left delay-5' : 'opacity-0'}`}>
+              <TypewriterFooter />
+            </div>
           </>
         )}
       </div>
@@ -159,7 +175,6 @@ export default function Home() {
         isOpen={showCardModal} 
         onClose={() => setShowCardModal(false)} 
       />
-      
       <LocationModal 
         isOpen={showLocationModal} 
         onClose={() => setShowLocationModal(false)} 
