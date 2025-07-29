@@ -122,7 +122,7 @@ export default function Home() {
               {/* Section 1: Wedding couple names - slides from left */}
              <div className={`text-white mt-2 mb-8 ${visibleSections >= 1 ? 'animate-slide-left' : 'opacity-0'}`}
                    style={{ animationDelay: '0.3s' }}>
-                <p className="text-xl md:text-2xl mb-3">We invite you to celebrate the wedding of</p>
+                <p className="text-xl md:text-1xl mb-3">We invite you to celebrate the wedding of</p>
                 <h1 className="text-4xl md:text-5xl font-bold mb-2">Mohammed Sajjad</h1>
                 <p className="text-3xl md:text-4xl mb-2">&</p>
                 <h1 className="text-4xl md:text-5xl font-bold">Shabnam</h1>
@@ -138,7 +138,7 @@ export default function Home() {
               </div>
 
               {/* Section 3: Wedding details - slides from left */}
-              <div className={`text-white text-xl md:text-2xl mb-8 ${visibleSections >= 3 ? 'slide-from-left delay-3' : 'opacity-0'}`}>
+              <div className={`text-white text-xl md:text-1xl mb-8 ${visibleSections >= 3 ? 'slide-from-left delay-3' : 'opacity-0'}`}>
                 <p className="mb-2">Saturday, 16th August 2025</p>
                 <p className="mb-2">11:00 AM onwards</p>
                 <p className="mb-2">RAHI Convention Centre - Edamuttam, Pulichode</p>
