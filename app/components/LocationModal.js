@@ -26,7 +26,7 @@ export default function LocationModal({ isOpen, onClose }) {
             <p className="text-lg mb-2 text-gray-600">RAHI Convention Centre</p>
             <p className="text-gray-600 mb-4">Edamuttam, Pulichode</p>
             <p className="text-gray-600 mb-4">Saturday, 16th August 2025</p>
-            <p className="text-gray-600 mb-4">11 AM - 2 PM</p>
+            <p className="text-gray-600 mb-4">11 AM - 2 PM </p>
            {/* Google Maps Embed */}
           <div className="w-full aspect-video rounded-lg overflow-hidden">
             <iframe 
