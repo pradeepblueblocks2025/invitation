@@ -35,7 +35,7 @@ export default function Home() {
       };
       
       revealSections();
-    }, 2000); // Initial loading delay
+    }, 10000); // Initial loading delay
 
     // Initialize video
     if (videoRef.current) {
@@ -46,7 +46,31 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  // ... (keep your existing audio handling code) ...
+  const handleUserInteraction = () => {
+    if (!userInteracted.current && audioRef.current) {
+      userInteracted.current = true;
+      setShowAudioPrompt(false);
+      audioRef.current.play()
+        .then(() => console.log("Audio started after interaction"))
+        .catch(e => console.error("Audio play failed:", e));
+    }
+  };
+
+  useEffect(() => {
+    const audioTimer = setTimeout(() => {
+      if (audioRef.current && !userInteracted.current) {
+        audioRef.current.muted = false;
+        audioRef.current.play()
+          .then(() => console.log("Audio autoplay succeeded"))
+          .catch(e => {
+            console.log("Autoplay blocked, showing prompt");
+            setShowAudioPrompt(true);
+          });
+      }
+    }, 1000);
+
+    return () => clearTimeout(audioTimer);
+  }, []);
 
   return (
     <>
@@ -108,24 +132,36 @@ export default function Home() {
         <source src="/assets/audio/wedding.mp3" type="audio/mpeg" />
       </audio>
 
+       {/* Audio enable prompt */}
+      {showAudioPrompt && (
+        <div 
+          className="fixed bottom-4 left-0 right-0 flex justify-center z-50 animate-bounce"
+          onClick={handleUserInteraction}
+        >
+          <div className="bg-white text-gray-800 px-6 py-3 rounded-full shadow-lg cursor-pointer">
+            🔈 Click anywhere to enable sound
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col" style={{ background: '#00000099' }}>
+      <div className="relative z-10 min-h-screen pt-10 flex flex-col" style={{ background: '#00000099' }}>
         {isLoading ? (
           <div className="flex-grow flex items-center justify-center">
-            <div className="animate-pulse text-white text-4xl font-bold">Loading...</div>
+            <div className="animate-pulse text-white text-4xl font-bold"></div>
           </div>
         ) : (
           <>
             
 
-            <main className="flex-grow flex flex-col items-center justify-center px-4 text-center">
+            <main className=" flex flex-col items-center justify-center px-4 text-center">
               {/* Section 1: Wedding couple names - slides from left */}
-             <div className={`text-white mt-2 mb-8 ${visibleSections >= 1 ? 'animate-slide-left' : 'opacity-0'}`}
+             <div className={`text-white mt-8 mb-8 ${visibleSections >= 1 ? 'animate-slide-left' : 'opacity-0'}`}
                    style={{ animationDelay: '0.3s' }}>
-                <p className="text-xl md:text-1xl mb-3">We invite you to celebrate the wedding of</p>
-                <h1 className="text-4xl md:text-5xl font-bold mb-2">Mohammed Sajjad</h1>
+                <p className="text-xl md:text-1xl mb-8">We invite you to celebrate the wedding of</p>
+                <h1 className="text-4xl md:text-7xl font-bold mb-2">Mohammed Sajjad</h1>
                 <p className="text-3xl md:text-4xl mb-2">&</p>
-                <h1 className="text-4xl md:text-5xl font-bold">Shabnam</h1>
+                <h1 className="text-4xl md:text-7xl font-bold">Shabnam</h1>
               </div>
 
               {/* Section 2: Countdown timer - slides from right */}
@@ -138,11 +174,7 @@ export default function Home() {
               </div>
 
               {/* Section 3: Wedding details - slides from left */}
-              <div className={`text-white text-xl md:text-1xl mb-8 ${visibleSections >= 3 ? 'slide-from-left delay-3' : 'opacity-0'}`}>
-                <p className="mb-2">Saturday, 16th August 2025</p>
-                <p className="mb-2">11:00 AM onwards</p>
-                <p className="mb-2">RAHI Convention Centre - Edamuttam, Pulichode</p>
-              </div>
+              
 
               {/* Section 4: Action buttons - slides from right */}
                   <div className={`text-white text-xl md:text-1xl mb-3 ${visibleSections >= 3 ? 'animate-slide-left' : 'opacity-0'}`}
