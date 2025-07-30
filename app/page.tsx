@@ -170,7 +170,7 @@ export default function Home() {
                 <CountdownTimer 
                   targetDate={new Date('August 16, 2025 11:00:00')} 
                   className="justify-center my-4"
-                />
+                /><p className="mb-4 mt-4 text-xl md:text-2xl">16th August 2025</p>
               </div>
 
               {/* Section 3: Wedding details - slides from left */}
